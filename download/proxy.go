@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -58,13 +57,13 @@ func (c *ProxyClient) ModuleName(path string) (string, error) {
 	}
 
 	defer resp.Body.Close()
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("could not get module name from %s: %s", u, string(b))
+		return "", fmt.Errorf("could not get module name from %s", u)
 	}
 
 	sp := strings.Split(string(b), "\n")
@@ -92,8 +91,7 @@ func (c *ProxyClient) LatestVersion(path string) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		b, _ := ioutil.ReadAll(resp.Body)
-		return "", fmt.Errorf("could not get latest module version from %s: %s", u, string(b))
+		return "", fmt.Errorf("could not get latest module version from %s", u)
 	}
 
 	var mv moduleVersion

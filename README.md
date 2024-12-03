@@ -8,7 +8,9 @@ A web application that generates a report on the quality of an open source Go pr
 
 Support us over on [Patreon](https://www.patreon.com/goreportcard)!
 
-<a href="https://cooperpress.com"><img src="https://goreportcard.com/assets/cooperpress.png" width="50%" height="50%"></a>
+<a href="https://www.dotcom-monitor.com/sponsoring-open-source-projects/"><img src="https://goreportcard.com/assets/dotcom-monitor-logo-brightGB.svg" width="50%" height="50%"></a>
+
+<a href="https://www.bairesdev.com/sponsoring-open-source-projects/"><img src="https://goreportcard.com/assets/bairesdev.png" width="50%" height="50%"></a>
 
 <a href="https://www.digitalocean.com?utm_medium=opensource&utm_source=goreportcard"><img src="https://goreportcard.com/assets/digitalocean.svg" width="50%" height="50%"></a>
 
@@ -56,16 +58,16 @@ goreportcard-cli
 ```
 
 ```
-Grade: A+ (99.9%)
-Files: 362
-Issues: 2
-gofmt: 100%
-go_vet: 99%
-gocyclo: 99%
-golint: 100%
-ineffassign: 100%
-license: 100%
-misspell: 100%
+Grade .......... A+  99.9%
+Files ................ 362
+Issues ................. 2
+gofmt ............... 100%
+go_vet ............... 99%
+gocyclo .............. 99%
+golint .............. 100%
+ineffassign ......... 100%
+license ............. 100%
+misspell ............ 100%
 ```
 
 Verbose output:
@@ -75,22 +77,22 @@ goreportcard-cli -v
 ```
 
 ```
-Grade: A+ (99.9%)
-Files: 332
-Issues: 2
-gofmt: 100%
-go_vet: 99%
+Grade .......... A+  99.9%
+Files ................ 362
+Issues ................. 2
+gofmt ............... 100%
+go_vet ............... 99%
 go_vet  vendor/github.com/prometheus/client_golang/prometheus/desc.go:25
         error: cannot find package "github.com/prometheus/client_model/go" in any of: (vet)
 
-gocyclo: 99%
+gocyclo .............. 99%
 gocyclo download/download.go:22
         warning: cyclomatic complexity 17 of function download() is high (> 15) (gocyclo)
 
-golint: 100%
-ineffassign: 100%
-license: 100%
-misspell: 100%
+golint .............. 100%
+ineffassign ......... 100%
+license ............. 100%
+misspell ............ 100%
 ```
 
 ### Contributing

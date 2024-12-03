@@ -6,18 +6,18 @@ import (
 )
 
 func TestGoFiles(t *testing.T) {
-	files, skipped, err := GoFiles("testfiles/")
+	files, skipped, err := GoFiles("testdata/testfiles/")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"testfiles/a.go", "testfiles/b.go", "testfiles/c.go"}
+	want := []string{"testdata/testfiles/a.go", "testdata/testfiles/b.go", "testdata/testfiles/c.go", "testdata/testfiles/d.go"}
 	if !reflect.DeepEqual(files, want) {
-		t.Errorf("GoFiles(%q) = %v, want %v", "testfiles/", files, want)
+		t.Errorf("GoFiles(%q) = %v, want %v", "testdata/testfiles/", files, want)
 	}
 
-	wantSkipped := []string{"testfiles/a.pb.go", "testfiles/a.pb.gw.go"}
+	wantSkipped := []string{"testdata/testfiles/a.pb.go", "testdata/testfiles/a.pb.gw.go"}
 	if !reflect.DeepEqual(skipped, wantSkipped) {
-		t.Errorf("GoFiles(%q) skipped = %v, want %v", "testfiles/", skipped, wantSkipped)
+		t.Errorf("GoFiles(%q) skipped = %v, want %v", "testdata/testfiles/", skipped, wantSkipped)
 	}
 }
 
@@ -30,7 +30,23 @@ var goToolTests = []struct {
 	failed    []FileSummary
 	wantErr   bool
 }{
-	{"go vet", "testfiles/", []string{"testfiles/a.go", "testfiles/b.go", "testfiles/c.go"}, []string{"go", "tool", "vet"}, 1, []FileSummary{}, false},
+	{"go vet", "testdata/testfiles", []string{"testdata/testfiles/a.go", "testdata/testfiles/b.go", "testdata/testfiles/c.go"}, []string{"go", "vet"}, 1, []FileSummary{}, false},
+	{
+		"staticcheck",
+		"testdata/testfiles/",
+		[]string{"testdata/testfiles/a.go", "testdata/testfiles/b.go", "testdata/testfiles/c.go", "testdata/testfiles/d.go"},
+		[]string{"staticcheck", "./..."},
+		0.75,
+		[]FileSummary{
+			{
+				Filename: "testdata/testfiles/d.go", FileURL: "",
+				Errors: []Error{
+					{LineNumber: 8, ErrorString: " func foo is unused (U1000)"},
+					{LineNumber: 10, ErrorString: " should use time.Until instead of t.Sub(time.Now()) (S1024)"}},
+			},
+		},
+		false,
+	},
 }
 
 func TestGoTool(t *testing.T) {
@@ -43,7 +59,7 @@ func TestGoTool(t *testing.T) {
 			t.Errorf("[%s] GoTool percent = %f, want %f", tt.name, f, tt.percent)
 		}
 		if !reflect.DeepEqual(fs, tt.failed) {
-			t.Errorf("[%s] GoTool failed = %v, want %v", tt.name, fs, tt.failed)
+			t.Errorf("[%s] GoTool failed = %#v, want %v", tt.name, fs, tt.failed)
 		}
 	}
 }

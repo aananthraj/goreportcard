@@ -38,7 +38,7 @@ type ChecksResult struct {
 }
 
 // Run executes all checks on the given directory
-func Run(dir string) (ChecksResult, error) {
+func Run(dir string, cli bool) (ChecksResult, error) {
 	filenames, skipped, err := GoFiles(dir)
 	if err != nil {
 		return ChecksResult{}, fmt.Errorf("could not get filenames: %v", err)
@@ -49,18 +49,22 @@ func Run(dir string) (ChecksResult, error) {
 
 	err = RenameFiles(skipped)
 	if err != nil {
-		log.Println("Could not remove files:", err)
+		log.Println("Could not rename files:", err)
 	}
-	defer RevertFiles(skipped)
+
+	if cli {
+		defer RevertFiles(skipped)
+	}
 
 	checks := []Check{
 		GoFmt{Dir: dir, Filenames: filenames},
 		GoVet{Dir: dir, Filenames: filenames},
-		GoLint{Dir: dir, Filenames: filenames},
+		// GoLint{Dir: dir, Filenames: filenames},
 		GoCyclo{Dir: dir, Filenames: filenames},
 		License{Dir: dir, Filenames: []string{}},
 		Misspell{Dir: dir, Filenames: filenames},
 		IneffAssign{Dir: dir, Filenames: filenames},
+		// Staticcheck{Dir: dir, Filenames: filenames},
 		// ErrCheck{Dir: dir, Filenames: filenames}, // disable errcheck for now, too slow and not finalized
 	}
 
